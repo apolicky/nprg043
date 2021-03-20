@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+// --- to be INTERNAL DATA STRUCTURE ------------
 
 class ArgumentB {
 public:
@@ -37,13 +38,13 @@ public:
 };
 
 
+// --- PUBLIC API -------------------------------
+
 class parser {
 private:
     std::map<std::string, std::shared_ptr<ArgumentB>> args;
     
 public:
-    parser(/* args */);
-    ~parser();
 
     template <typename T>
     void add_argument(
@@ -60,18 +61,25 @@ public:
         const std::string& help = "",
         bool required = true);
 
+    // returns the value of command line argument 'arg_name' if present, else throws an exception
     template <typename T>
     T get(const std::string& arg_name);
 
     // 0 -> not specified in 'argv', else number of výskytů
     size_t count(const std::string& arg_name);
 
+    // parses arguments by given rules
     void parse_args(int argc, char** argv);
 
+    // returns plain command line arguments
     const std::vector<std::string>& get_plain();
+
+    // returns the size of plain command line arguments
     size_t plain_count();
 
 };
+
+// --- testing implementation -------------------
 
 template <typename T>
 T parser::get(const std::string& arg_name) {
@@ -84,10 +92,9 @@ void parser::add_argument(
     const std::string & sn,
     const std::string & ln, 
     const std::string & help, 
-    bool req
-) {
+    bool req) {
+
     if (!this->args.count(sn)) {
-        // this->args[sn] = std::make_shared<Argument<T>>(sn,ln,help,req);
         this->args[sn] = std::make_shared<Argument<T>>();
     }
     else {
@@ -101,8 +108,7 @@ void parser::add_argument(
     const std::string& ln,
     const std::vector<T>& choices,
     const std::string& help,
-    bool req
-) {
+    bool req) {
     this->args[sn] = std::move(Argument<T>(sn,ln,choices,help,req));
 }
 

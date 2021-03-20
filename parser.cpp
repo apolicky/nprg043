@@ -1,14 +1,5 @@
 #include "parser.hpp"
 
-// template <typename T>
-parser::parser(/* args */)
-{
-}
-
-parser::~parser()
-{
-}
-
 int main(int argc, char const *argv[])
 {
     parser p;
